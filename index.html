@@ -2,15 +2,107 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>NFC Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QRTOO NFC Writer</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    width:350px;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 0 15px rgba(0,0,0,.15);
+}
+
+input{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    margin-top:10px;
+    margin-bottom:20px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#status{
+    margin-top:20px;
+    font-weight:bold;
+}
+</style>
+
 </head>
 <body>
 
-<h1>QRTOO NFC Test</h1>
+<div class="card">
 
-<button onclick="alert('Çalışıyor!')">
-Test
+<h2>QRTOO NFC Writer</h2>
+
+<input
+id="url"
+value="https://qrtoo.de/test">
+
+<button onclick="writeNFC()">
+NFC'ye Yaz
 </button>
+
+<div id="status"></div>
+
+</div>
+
+<script>
+
+async function writeNFC(){
+
+    const status=document.getElementById("status");
+
+    if(!("NDEFWriter" in window)){
+        status.innerHTML="❌ Bu telefon Web NFC desteklemiyor.";
+        return;
+    }
+
+    try{
+
+        const writer=new NDEFWriter();
+
+        status.innerHTML="📲 Kartı telefona yaklaştır...";
+
+        await writer.write({
+            records:[
+                {
+                    recordType:"url",
+                    data:document.getElementById("url").value
+                }
+            ]
+        });
+
+        status.innerHTML="✅ Başarıyla yazıldı.";
+
+    }
+
+    catch(err){
+
+        status.innerHTML="❌ "+err;
+
+    }
+
+}
+
+</script>
 
 </body>
 </html>
