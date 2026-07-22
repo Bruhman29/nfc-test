@@ -1,2 +1,2 @@
 # nfc-test 
-a generic nfc test html program 
+a generic  web-nfc test program coded via html 
